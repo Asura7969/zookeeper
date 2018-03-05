@@ -30,18 +30,18 @@ public class ZookeeperTest {
 	};
 	
 	private ZooKeeper zooKeeper;
-	
+
 	/**
-	 *  ����zookeeper
+	 * 连接zookeeper
 	 * @throws IOException
 	 */
 	@Before
 	public void connect() throws IOException {
 		zooKeeper  = new ZooKeeper("192.168.1.201:2181,192.168.1.202:2181,192.168.1.203:2181", SESSION_TIMEOUT, watcher);
 	}
-	
+
 	/**
-	 *  �ر�����
+	 * 关闭连接
 	 */
 	@After
 	public void close() {
@@ -53,12 +53,12 @@ public class ZookeeperTest {
 	}
 
 	/**
-	 * ����һ��znode 
-	 *  1.CreateMode ȡֵ  
-	 *  PERSISTENT���־û������Ŀ¼�ڵ�洢�����ݲ��ᶪʧ
-	 *  PERSISTENT_SEQUENTIAL��˳���Զ���ŵ�Ŀ¼�ڵ㣬����Ŀ¼�ڵ����ݵ�ǰ�ѽ����ڵĽڵ����Զ��� 1��Ȼ�󷵻ظ��ͻ����Ѿ��ɹ�������Ŀ¼�ڵ�����
-	 *  EPHEMERAL����ʱĿ¼�ڵ㣬һ����������ڵ�Ŀͻ�����������˿�Ҳ���� session���ڳ�ʱ�����ֽڵ�ᱻ�Զ�ɾ��
-	 *  EPHEMERAL_SEQUENTIAL����ʱ�Զ���Žڵ�
+	 * 创建一个znode
+	 *  1.CreateMode 取值
+	 *  PERSISTENT：持久化，这个目录节点存储的数据不会丢失
+	 *  PERSISTENT_SEQUENTIAL：顺序自动编号的目录节点，这种目录节点会根据当前已近存在的节点数自动加 1，然后返回给客户端已经成功创建的目录节点名；
+	 *  EPHEMERAL：临时目录节点，一旦创建这个节点的客户端与服务器端口也就是 session过期超时，这种节点会被自动删除
+	 *  EPHEMERAL_SEQUENTIAL：临时自动编号节点
 	 * <br>------------------------------<br>
 	 */
 	@Test
@@ -72,9 +72,9 @@ public class ZookeeperTest {
 		}
 		 LOGGER.info("create result : {}", result);
 	 }
-	
+
 	/**
-	 * ɾ���ڵ�  ���԰汾
+	 * 删除节点  忽略版本
 	 */
 	@Test
 	public void testDelete() {
@@ -85,9 +85,9 @@ public class ZookeeperTest {
 			 Assert.fail();
 		}
 	}
-	
+
 	/**
-	 *   ��ȡ����
+	 * 获取数据
 	 */
 	@Test
 	public void testGetData() {
@@ -101,9 +101,9 @@ public class ZookeeperTest {
 		}
 		 LOGGER.info("getdata result : {}", result);
 	}
-	
+
 	/**
-	 *   ��ȡ����  ����watch
+	 * 获取数据  设置watch
 	 */
 	@Test
 	public void testGetDataWatch() {
@@ -120,8 +120,8 @@ public class ZookeeperTest {
 			 Assert.fail();
 		}
 		 LOGGER.info("getdata result : {}", result);
-		 
-		 // ����wacth  NodeDataChanged
+
+		 // 触发wacth  NodeDataChanged
 		 try {
 			 zooKeeper.setData("/zk001", "testSetData".getBytes(), -1);
 		} catch (Exception e) {
@@ -129,10 +129,10 @@ public class ZookeeperTest {
 			 Assert.fail();
 		}
 	}
-	
+
 	/**
-	 *    �жϽڵ��Ƿ����
-	 *    �����Ƿ������Ŀ¼�ڵ㣬����� watcher ���ڴ��� ZooKeeperʵ��ʱָ���� watcher
+	 * 判断节点是否存在
+	 * 设置是否监控这个目录节点，这里的 watcher 是在创建 ZooKeeper实例时指定的 watcher
 	 */
 	@Test
 	public void testExists() {
@@ -146,9 +146,9 @@ public class ZookeeperTest {
 		 Assert.assertNotNull(stat);
 		 LOGGER.info("exists result : {}", stat.getCzxid());
 	}
-	
+
 	/**
-	 *     ���ö�Ӧznode�µ�����  ,  -1��ʾƥ�����а汾
+	 * 设置对应znode下的数据  ,  -1表示匹配所有版本
 	 */
 	@Test
 	public void testSetData() {
@@ -162,10 +162,10 @@ public class ZookeeperTest {
 		 Assert.assertNotNull(stat);
 		 LOGGER.info("exists result : {}", stat.getVersion());	
 	}
-	
+
 	/**
-	 *    �жϽڵ��Ƿ����, 
-	 *    �����Ƿ������Ŀ¼�ڵ㣬����� watcher ���ڴ��� ZooKeeperʵ��ʱָ���� watcher
+	 * 判断节点是否存在,
+	 * 设置是否监控这个目录节点，这里的 watcher 是在创建 ZooKeeper实例时指定的 watcher
 	 */
 	@Test
 	public void testExistsWatch1() {
@@ -184,10 +184,10 @@ public class ZookeeperTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 *    �жϽڵ��Ƿ����, 
-	 *    ���ü�����Ŀ¼�ڵ�� Watcher
+	 * 判断节点是否存在,
+	 * 设置监控这个目录节点的 Watcher
 	 */
 	@Test
 	public void testExistsWatch2() {
@@ -204,24 +204,24 @@ public class ZookeeperTest {
 			 Assert.fail();
 		}
 		 Assert.assertNotNull(stat);
-		 
-		 // ����watch �е�process����   NodeDataChanged
+
+		 // 触发watch 中的process方法   NodeDataChanged
 		 try {
 			zooKeeper.setData("/zk002", "testExistsWatch2".getBytes(), -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		 
-		 // ���ᴥ��watch ֻ�ᴥ��һ��
+
+		 // 不会触发watch 只会触发一次
 		 try {
 			zooKeeper.delete("/zk002", -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 *  ��ȡָ���ڵ��µ��ӽڵ�
+	 *  获取指定节点下的子节点
 	 */
 	@Test
 	public void testGetChild() {

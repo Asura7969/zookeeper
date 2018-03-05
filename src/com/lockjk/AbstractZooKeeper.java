@@ -15,8 +15,8 @@ public class AbstractZooKeeper implements Watcher {
     protected CountDownLatch countDownLatch = new CountDownLatch(1);  
 
     public ZooKeeper connect(String hosts,int SESSION_TIMEOUT) throws IOException, InterruptedException{  
-        zooKeeper = new ZooKeeper(hosts,SESSION_TIMEOUT,this);  
-        countDownLatch.await();  
+        zooKeeper = new ZooKeeper(hosts,SESSION_TIMEOUT,this);
+        countDownLatch.await();
         System.out.println("AbstractZooKeeper.connect()");
         return zooKeeper;
     }  
@@ -24,10 +24,10 @@ public class AbstractZooKeeper implements Watcher {
     @Override
     public void process(WatchedEvent event) {
         if(event.getState() == KeeperState.SyncConnected){  
-            countDownLatch.countDown();  
+            countDownLatch.countDown();
         }  
     }  
     public void close() throws InterruptedException{  
-        zooKeeper.close();  
+        zooKeeper.close();
     }  
 }  

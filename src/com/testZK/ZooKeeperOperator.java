@@ -7,8 +7,7 @@ import org.apache.zookeeper.ZooDefs.Ids;
   
 public class ZooKeeperOperator extends AbstractZooKeeper {  
     /** 
-     * �����־�̬��znode,��֧�ֶ�㴴��.�����ڴ���/parent/child�������,��/parent.�޷�ͨ��. 
-     * @param path eg:  /parent/child1 
+     * @param path eg:  /parent/child1
      * @param data 
      * @throws InterruptedException  
      * @throws KeeperException  
@@ -19,8 +18,7 @@ public class ZooKeeperOperator extends AbstractZooKeeper {
       
       
     /** 
-     * ��ȡ�ڵ�ĺ�����Ϣ 
-     * @param path 
+     * @param path
      * @throws KeeperException 
      * @throws InterruptedException 
      */  
@@ -28,16 +26,16 @@ public class ZooKeeperOperator extends AbstractZooKeeper {
         try {  
             List<String> children = this.zooKeeper.getChildren(path, false);  
             if (children.isEmpty()) {  
-                System.out.printf("û�нڵ���%s��.", path);  
+                System.out.printf("子目录为空：", path);
                 return;  
             }else{  
-                System.out.printf("�ڵ�%s�д��ڵĽڵ�:\n", path);  
+                System.out.printf("子目录不为空：", path);
                 for(String child: children){  
                     System.out.println(child);  
                 }  
             }  
         } catch (KeeperException.NoNodeException e) {  
-            System.out.printf("%s�ڵ㲻����.", path);  
+            System.out.printf("父节点不存在：", path);
             throw e;  
         }  
     }  
@@ -49,7 +47,7 @@ public class ZooKeeperOperator extends AbstractZooKeeper {
     
     public static void main(String[] args) {  
         try {  
-            ZooKeeperOperator zkoperator             = new ZooKeeperOperator();  
+            ZooKeeperOperator zkoperator = new ZooKeeperOperator();
             zkoperator.connect("192.168.1.201");  
             byte[] data = new byte[]{'d','a','t','a'};  
               
@@ -62,7 +60,7 @@ public class ZooKeeperOperator extends AbstractZooKeeper {
             zkoperator.create("/root/child2",data);  
             System.out.println(Arrays.toString(zkoperator.getData("/root/child2")));  
               
-            System.out.println("�ڵ㺢����Ϣ:");  
+            System.out.println("获取子目录");
             zkoperator.getChild("/root");  
               
             zkoperator.close();  
